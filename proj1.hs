@@ -5,8 +5,8 @@ import Data.Char
 
 --example poly
 
-p1 = [[ord 'x', 2, 0], [ord 'y', 1, 2], [ord 'z', 1, 5], [ord 'y', 1, 1], [ord 'y', 2, 7]]
-p2 = [[ord 'z', 1, 10], [ord 'x', 2, 3]]
+--p1 = [[ord 'x', 2, 0], [ord 'y', 1, 2], [ord 'z', 1, 5], [ord 'y', 1, 1], [ord 'y', 2, 7]]
+--p2 = [[ord 'z', 1, 10], [ord 'x', 2, 3]]
 
 sortPoly :: [[Int]] -> [[Int]]
 sortPoly [] = []
@@ -93,9 +93,9 @@ createPoly c v d = Poly v (insertAt c d [])
 
 addToPolyList :: Float -> String -> Int -> [Poly] -> [Poly]
 addToPolyList c v d [] = [createPoly c v d] 
---addToPolyList c v d pl 
---                    |v in pl.getAllVars = insertAt c (d - 1) (getCoes plv) --pseudocode
---                    |otherwise = pl ++ [createPoly c v d]
+addToPolyList c v d pl 
+                    |isMember v (getAllVars pl) = Poly  v (updateCoes c (d) (getCoes (pl !! (head (elemIndices v (getAllVars pl)))))) : [p | p <- pl, getVar p /= v]
+                    |otherwise = pl ++ [createPoly c v d]
 
 getCoes :: Poly -> [Float]
 getCoes (Poly _ coes) = coes
@@ -105,7 +105,10 @@ getVar (Poly var _) = var
 
 getAllVars :: [Poly] -> [String]
 getAllVars [] = []
---getAllVars pl = filter (\getVar _ -> var) pl
+getAllVars pl = map getVar pl
+
+updateCoes :: Float -> Int -> [Float] -> [Float]
+updateCoes n i c = zp (insertAt n i (take i (repeat 0))) c
 
 stringToListPolys :: String -> [Poly]
 stringToListPolys "" = []
@@ -116,19 +119,37 @@ showPoly pl = concat[concat[" + " ++ show c ++ "*" ++ getVar p ++ "^" ++ show (l
 insertAt :: Float -> Int -> [Float] -> [Float]
 insertAt ne i [] = (take i (repeat 0)) ++ [ne] 
 insertAt newElement i (a:as)
-  | length(as)+1 < i = insertAt newElement i (zp (a:as) (take i (repeat 0)))
   | i <= 0 = newElement:a:as
   | otherwise = a : insertAt newElement (i - 1) as
+
 
 zp :: [Float] -> [Float] -> [Float]
 zp a b = if (length a >= length b)
                 then zipWith (+) a (b ++ repeat 0)
                 else zp b a
 
-a = [0,1,2,3]
-b = [0,0,0,0,0,0,0,0]
+isMember :: String -> [String] -> Bool
+isMember n [] = False
+isMember n (x:xs)
+    | n == x = True
+    | otherwise = isMember n xs
+
 
 -- example: 0*x^2 + 2*y + 5*z + y + 7*y^2
 example :: [Poly]
 example = [createPoly 0 "x" 2, createPoly 2 "y" 1, createPoly 5 "z" 1, createPoly 1 "y" 1, createPoly 7 "y" 2]
 
+polyList = []
+p1 = addToPolyList 0 "x" 2 polyList
+p2 = addToPolyList 2 "y" 1 polyList
+p3 = addToPolyList 5 "z" 1 polyList
+p4 = addToPolyList 1 "y" 1 polyList
+p5 = addToPolyList 7 "y" 2 polyList
+
+ex = do 
+    let polyList = []
+    p1
+
+    showPoly polyList
+
+pp = [createPoly 0 "x" 2, createPoly 2 "y" 1]
