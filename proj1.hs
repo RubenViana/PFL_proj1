@@ -94,7 +94,7 @@ createPoly c v d = Poly v (insertAt c d [])
 addToPolyList :: Float -> String -> Int -> [Poly] -> [Poly]
 addToPolyList c v d [] = [createPoly c v d] 
 addToPolyList c v d pl 
-                    |isMember v (getAllVars pl) = Poly  v (updateCoes c (d) (getCoes (pl !! (head (elemIndices v (getAllVars pl)))))) : [p | p <- pl, getVar p /= v]
+                    |isMember v (getAllVars pl) = Poly v (updateCoes c d (getCoes (pl !! (head (elemIndices v (getAllVars pl)))))) : [p | p <- pl, getVar p /= v]
                     |otherwise = pl ++ [createPoly c v d]
 
 getCoes :: Poly -> [Float]
@@ -114,7 +114,7 @@ stringToListPolys :: String -> [Poly]
 stringToListPolys "" = []
 --stringToListPolys -- '+/-/ ' -> int -> '*' -> char -> '^' -> int  <<== maybe state machine! or create a func for each type o value...
 
-showPoly pl = concat[concat[" + " ++ show c ++ "*" ++ getVar p ++ "^" ++ show (length (getCoes p)) | c <- reverse (getCoes p), c > 0] | p <- sort pl]
+showPoly pl = concat[concat[" + " ++ show c ++ "*" ++ getVar p ++ "^" ++ show (head (elemIndices c (getCoes p))) | c <- reverse (getCoes p), c > 0] | p <- sort pl]
 
 insertAt :: Float -> Int -> [Float] -> [Float]
 insertAt ne i [] = (take i (repeat 0)) ++ [ne] 
@@ -139,17 +139,5 @@ isMember n (x:xs)
 example :: [Poly]
 example = [createPoly 0 "x" 2, createPoly 2 "y" 1, createPoly 5 "z" 1, createPoly 1 "y" 1, createPoly 7 "y" 2]
 
-polyList = []
-p1 = addToPolyList 0 "x" 2 polyList
-p2 = addToPolyList 2 "y" 1 polyList
-p3 = addToPolyList 5 "z" 1 polyList
-p4 = addToPolyList 1 "y" 1 polyList
-p5 = addToPolyList 7 "y" 2 polyList
 
-ex = do 
-    let polyList = []
-    p1
-
-    showPoly polyList
-
-pp = [createPoly 0 "x" 2, createPoly 2 "y" 1]
+pp = showPoly (addToPolyList 7 "y" 2 (addToPolyList 1 "y" 1 (addToPolyList 5 "z" 1 (addToPolyList 2 "y" 1 (addToPolyList 0 "x" 2 [])))))
