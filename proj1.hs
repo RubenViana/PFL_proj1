@@ -8,7 +8,7 @@ import Data.Char
 --p1 = [[ord 'x', 2, 0], [ord 'y', 1, 2], [ord 'z', 1, 5], [ord 'y', 1, 1], [ord 'y', 2, 7]]
 --p2 = [[ord 'z', 1, 10], [ord 'x', 2, 3]]
 
-sortPoly :: [[Int]] -> [[Int]]
+{--sortPoly :: [[Int]] -> [[Int]]
 sortPoly [] = []
 sortPoly [x] = [x]
 sortPoly (x:y:xs)
@@ -66,7 +66,7 @@ derive [] = []
 derive (x:xs) = [x !! 0, (x !! 1) - 1, (x !! 2) * (x !! 1)] : derive (xs)
 
 
-{--data Term = Term {coe :: Float, var :: Char, degree :: Int} deriving (Show)
+data Term = Term {coe :: Float, var :: Char, degree :: Int} deriving (Show)
 
 getCoe :: Term -> Float
 getCoe (Term coe _ _) = coe
@@ -114,7 +114,13 @@ stringToListPolys :: String -> [Poly]
 stringToListPolys "" = []
 --stringToListPolys -- '+/-/ ' -> int -> '*' -> char -> '^' -> int  <<== maybe state machine! or create a func for each type o value...
 
-showPoly pl = concat[concat[" + " ++ show c ++ "*" ++ getVar p ++ "^" ++ show (head (elemIndices c (getCoes p))) | c <- reverse (getCoes p), c > 0] | p <- sort pl]
+addPolys :: [Poly] -> [Poly] -> [Poly]
+addPolys [pl] _ = [pl]
+addPolys pl1 [] = pl1
+addPolys pl1 (p2:pl2) = addPolys (concat[addToPolyList c (getVar p2) d pl1 |  c <- getCoes p2, c /= 0, let d = head (elemIndices c (getCoes p2))]) pl2
+
+
+showPoly pl = concat[concat[sig ++ show (abs c) ++ "*" ++ getVar p ++ exp | c <- reverse (getCoes p), c /= 0, let sig = if (c >= 0) then " + " else " - ", let x = head (elemIndices c (getCoes p)), let exp = if (x == 1) then "" else ("^" ++ show x)] | p <- sort pl]
 
 insertAt :: Float -> Int -> [Float] -> [Float]
 insertAt ne i [] = (take i (repeat 0)) ++ [ne] 
@@ -140,4 +146,7 @@ example :: [Poly]
 example = [createPoly 0 "x" 2, createPoly 2 "y" 1, createPoly 5 "z" 1, createPoly 1 "y" 1, createPoly 7 "y" 2]
 
 
-pp = showPoly (addToPolyList 7 "y" 2 (addToPolyList 1 "y" 1 (addToPolyList 5 "z" 1 (addToPolyList 2 "y" 1 (addToPolyList 0 "x" 2 [])))))
+pp1 = addToPolyList (-7) "y" 2 (addToPolyList 1 "y" 1 (addToPolyList 5 "z" 1 (addToPolyList 2 "y" 1 (addToPolyList 0 "x" 2 []))))
+pp2 = addToPolyList 5 "x" 2 (addToPolyList (3) "y" 2 [])
+
+
