@@ -92,10 +92,11 @@ createPoly :: Float -> String -> Int -> Poly
 createPoly c v d = Poly v (insertAt c d [])
 
 addToPolyList :: Float -> String -> Int -> [Poly] -> [Poly]
-addToPolyList c v d [] = [createPoly c v d] 
+addToPolyList c v d [] = [createPoly c var d] where var = if (d == 0) then "zzzz" else v
 addToPolyList c v d pl 
-                    |isMember v (getAllVars pl) = Poly v (updateCoes c d (getCoes (pl !! (head (elemIndices v (getAllVars pl)))))) : [p | p <- pl, getVar p /= v]
-                    |otherwise = pl ++ [createPoly c v d]
+                    |(isMember var (getAllVars pl)) = Poly var (updateCoes c d (getCoes (pl !! (head (elemIndices var (getAllVars pl)))))) : [p | p <- pl, getVar p /= var]
+                    |otherwise = pl ++ [createPoly c var d]
+                    where var = if (d == 0) then "zzzz" else v
 
 getCoes :: Poly -> [Float]
 getCoes (Poly _ coes) = coes
@@ -119,8 +120,11 @@ addPolys [pl] _ = [pl]
 addPolys pl1 [] = pl1
 addPolys pl1 (p2:pl2) = addPolys (concat[addToPolyList c (getVar p2) d pl1 |  c <- getCoes p2, c /= 0, let d = head (elemIndices c (getCoes p2))]) pl2
 
+derivePoly :: [Poly] -> [Poly]
+derivePoly [] = []
+derivePoly (p:pl) = (concat[addToPolyList c (getVar p) (d) [] | c <- derive (getCoes p), c/=0, let d = head (elemIndices c (derive (getCoes p)))]) ++ derivePoly pl
 
-showPoly pl = concat[concat[sig ++ show (abs c) ++ "*" ++ getVar p ++ exp | c <- reverse (getCoes p), c /= 0, let sig = if (c >= 0) then " + " else " - ", let x = head (elemIndices c (getCoes p)), let exp = if (x == 1) then "" else ("^" ++ show x)] | p <- sort pl]
+showPoly pl = concat[concat[sig ++ show (abs c) ++ var ++ exp | c <- reverse (getCoes p), c /= 0, let sig = if (c >= 0) then " + " else " - ", let d = head (elemIndices c (getCoes p)), let var = if (d == 0) then "" else ("*" ++ getVar p), let exp = if (d <= 1) then "" else ("^" ++ show d)] | p <- sort pl]
 
 insertAt :: Float -> Int -> [Float] -> [Float]
 insertAt ne i [] = (take i (repeat 0)) ++ [ne] 
@@ -128,6 +132,9 @@ insertAt newElement i (a:as)
   | i <= 0 = newElement:a:as
   | otherwise = a : insertAt newElement (i - 1) as
 
+derive :: [Float] -> [Float]
+derive [] = []
+derive (_:xs) = zipWith (*) xs [1..]
 
 zp :: [Float] -> [Float] -> [Float]
 zp a b = if (length a >= length b)
@@ -146,7 +153,7 @@ example :: [Poly]
 example = [createPoly 0 "x" 2, createPoly 2 "y" 1, createPoly 5 "z" 1, createPoly 1 "y" 1, createPoly 7 "y" 2]
 
 
-pp1 = addToPolyList (-7) "y" 2 (addToPolyList 1 "y" 1 (addToPolyList 5 "z" 1 (addToPolyList 2 "y" 1 (addToPolyList 0 "x" 2 []))))
-pp2 = addToPolyList 5 "x" 2 (addToPolyList (3) "y" 2 [])
+pp1 = addToPolyList (-7) "y" 2 (addToPolyList 1 "y" 0 (addToPolyList 5 "z" 1 (addToPolyList 2 "y" 1 (addToPolyList 0 "x" 2 []))))
+pp2 = addToPolyList 10 "" 0 (addToPolyList 5 "x" 2 (addToPolyList (3) "" 0 []))
 
 
