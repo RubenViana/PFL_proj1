@@ -1,4 +1,4 @@
-# PFL_TP1_#G12_03.zip
+# PFL_TP1_#G12_03
 
 
 ## Representação interna de polinómios:
