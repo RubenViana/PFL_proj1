@@ -67,11 +67,12 @@ derivePolynomial pl = normalizePolynomial (derivePoly pl)
 ## Exemplos de utilização que permitam testar todas as funcionalidades do programa:
 
 - Chamar a função `main`, intoduzir o número correspondente à opção desejada como descrito abaixo.
+![normalize][/img/normalize.png]
 
 ## Adicional:
 
 - *menu*: Realizou-se um menu para facilitar a interação do utilizador com o programa.
-*Descrição de estratégia*: Está repartido por quatro opções de trabalho (*1 - Normalizar polinómios*, *2 - Adicionar polinómios*, *3 - Multiplicar polinómios*, *4 - Derivar polinómios*) e uma opção de saída (*0 - exit*)
+- *Descrição de estratégia*: Está repartido por quatro opções de trabalho (*1 - Normalizar polinómios*, *2 - Adicionar polinómios*, *3 - Multiplicar polinómios*, *4 - Derivar polinómios*) e uma opção de saída (*0 - exit*)
 
 ```
 main = do
