@@ -67,7 +67,10 @@ derivePolynomial pl = normalizePolynomial (derivePoly pl)
 ## Exemplos de utilização que permitam testar todas as funcionalidades do programa:
 
 - Chamar a função `main`, intoduzir o número correspondente à opção desejada como descrito abaixo.
-![normalize][/img/normalize.png]
+![normalize](img/normalize.png)
+![add](img/add.png)
+![multiply](img/multiply.png)
+![derive](img/derive.png)
 
 ## Adicional:
 
