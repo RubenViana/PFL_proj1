@@ -126,9 +126,10 @@ addPolynomials pl [] = pl
 addPolynomials pl1 pl2 = normalizePolynomial (pl1 ++ pl2)
 
 multiplyPolynomials :: [Poly] -> [Poly] -> [Poly]
-multiplyPolynomials [] pl = pl
-multiplyPolynomials pl [] = pl
---multiplyPolynomials pl1 pl2 = ...             TODO
+multiplyPolynomials [] pl = []
+multiplyPolynomials pl [] = []
+multiplyPolynomials pl1 pl2 = concat[ concat[ addTermToPolyList (c1*c2) (v1 ++ if (v1 == "" || v2 == "")then "" else "*" ++ v2) (1) [] | p2 <- pl2, c2 <- getCoes p2, c1 <- getCoes p1, c1 /= 0, c2 /= 0, let v1 = if (head (elemIndices c1 (getCoes p1)) == 1 && getVar p1 /= "zzzz") then getVar p1 else if (getVar p1 == "zzzz") then "" else getVar p1 ++ "^" ++ show(head (elemIndices c1 (getCoes p1))), let v2 = if (head (elemIndices c2 (getCoes p2)) == 1 && getVar p2 /= "zzzz") then getVar p2 else if (getVar p2 == "zzzz") then "" else getVar p2 ++ "^" ++ show(head (elemIndices c2 (getCoes p2)))] | p1 <- pl1]
+
 
 derivePolynomial :: [Poly] -> [Poly]
 derivePolynomial [] = []
@@ -164,7 +165,7 @@ main = do
                 pol1 <- getLine
                 putStr "Enter Polynomial 2: "
                 pol2 <- getLine
-                putStrLn "(showPoly (multiplyPolynomials (stringToPolyList pol1) (stringToPolyList pol2)))" -- NOT IMPLEMENTED
+                putStrLn (showPoly (multiplyPolynomials (stringToPolyList pol1) (stringToPolyList pol2)))
         else if (opt == 4) then
             do
                 putStr "Enter Polynomial: "
@@ -176,3 +177,9 @@ main = do
             main
 
 -- example: 0*x^2 + 2*y -5*z + y + 7*y^2
+
+p1 = stringToPolyList "x^2 + x"
+p2 = stringToPolyList "x + 5"
+
+
+
