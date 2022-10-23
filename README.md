@@ -74,6 +74,8 @@ derivePolynomial pl = normalizePolynomial (derivePoly pl)
 
 ## Adicional:
 
+- *versão usada*: 8.8.4 (recomendada pelo enunciado: 9.0.1).
+- *imports utilizados*: `import Data.List`, `import Data.Char` e `import Data.List.Split`
 - *menu*: Realizou-se um menu para facilitar a interação do utilizador com o programa.
 - *Descrição de estratégia*: Está repartido por quatro opções de trabalho (*1 - Normalizar polinómios*, *2 - Adicionar polinómios*, *3 - Multiplicar polinómios*, *4 - Derivar polinómios*) e uma opção de saída (*0 - exit*).
 - *Code*:
