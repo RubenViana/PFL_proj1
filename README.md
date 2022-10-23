@@ -4,7 +4,7 @@
 ## Representação interna de polinómios:
 
 - *Representação interna*.
-*Code*
+- *Code*:
 
 ```
 data Poly = Poly {var :: String, coes :: [Float]} deriving (Show, Ord, Eq)
@@ -12,15 +12,19 @@ data Poly = Poly {var :: String, coes :: [Float]} deriving (Show, Ord, Eq)
 
 ### Descrição da escolha:
 
+- Considerando os polinómios, fez-se uma repartição em variáveis do tipo `string` e coeficientes do tipo `float`.
+
 ### Justificação da escolha:
+
+- Recorrendo a conhecimentos matemáticos prévios e ao pensamento na altura de início do projeto pareceu-nos uma das formas mais fáceis e eficientes de representar o polinómio.
 
 ## Funcionalidades e descrição da estratégia de implementação de cada uma:
 
 ### Funções principais:
 
 - *normalizePolynomial*: Função que realiza a normalização dos polinómios, ou seja, coloca-os na forma normal.
-*Descrição de estratégia*:
-*Code*:
+- *Descrição de estratégia*: Iterar a lista do polinómios de forma recursiva e ao comparar dois polinómios se tivessem a mesma variável juntam-se as listas dos dois, caso contrário mantinham-se os polinómios iguais.
+-*Code*:
 
 ```
 normalizePolynomial :: [Poly] -> [Poly]
@@ -29,8 +33,8 @@ normalizePolynomial pl = normRec [] pl
 ```
 
 - *addPolynomials*: Função que realiza a adição dos polinómios.
-*Descrição de estratégia*:
-*Code*:
+- *Descrição de estratégia*: Fazer a normalização da concatenação dos dois polinómios.
+- *Code*:
 
 ```
 addPolynomials :: [Poly] -> [Poly] -> [Poly]
@@ -40,8 +44,8 @@ addPolynomials pl1 pl2 = normalizePolynomial (pl1 ++ pl2)
 ```
 
 - *multiplyPolynomials*: Função que realiza a multiplicação dos polinómios.
-*Descrição de estratégia*:
-*Code*:
+- *Descrição de estratégia*: Para cada elemento do primeiro polinómio multiplicar com todos os elementos do segundo polinómio.
+- *Code*:
 
 ```
 multiplyPolynomials :: [Poly] -> [Poly] -> [Poly]
@@ -51,8 +55,8 @@ multiplyPolynomials pl1 pl2 = normalizePolynomial (multiply pl1 pl2)
 ```
 
 - *derivePolynomial*: Função que realiza a derivação dos polinómios.
-*Descrição de estratégia*:
-*Code*:
+- *Descrição de estratégia*: Tendo um polinómio, pega-se na cauda da lista dos coeficientes deste e multiplica-se pelo seu indíce mais um.
+- *Code*:
 
 ```
 derivePolynomial :: [Poly] -> [Poly]
@@ -75,7 +79,7 @@ insertAt newElement i (a:as)
 ```
 
 - *derive*: Função que faz a efetiva derivação.
-*Descrição de estratégia*:
+*Descrição de estratégia*: Tendo uma lista, pega-se na cauda da lista dos coeficientes e multiplica-se pelo seu indíce mais um.
 *Code*:
 
 ```
@@ -313,11 +317,12 @@ showPoly pl = concat[concat[sig ++ show (abs c) ++ var ++ exp | c <- reverse (ge
 
 ## Exemplos de utilização que permitam testar todas as funcionalidades do programa:
 
+- Chamar a função `main`, intoduzir o número correspondente à opção desejada como descrito abaixo.
 
 ## Adicional:
 
 - *menu*: Realizou-se um menu para facilitar a interação do utilizador com o programa.
-*Descrição de estratégia*: Está repartido por quatro opções de trabalho (*1 - Normalizar polinómios*, *2 - Adicionar polinómios*, *3 - Multiplicar polinómios*, *4 - Derivar polinómios*) e uma opção de saída (*exit*)
+*Descrição de estratégia*: Está repartido por quatro opções de trabalho (*1 - Normalizar polinómios*, *2 - Adicionar polinómios*, *3 - Multiplicar polinómios*, *4 - Derivar polinómios*) e uma opção de saída (*0 - exit*)
 
 ```
 main = do
